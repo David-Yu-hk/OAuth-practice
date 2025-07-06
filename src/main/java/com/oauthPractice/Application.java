@@ -1,4 +1,4 @@
-package com.oauth.practice.spring_boot;
+package com.oauthPractice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
