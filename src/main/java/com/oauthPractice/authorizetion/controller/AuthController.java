@@ -1,24 +1,33 @@
 package com.oauthPractice.authorizetion.controller;
 
+import com.oauthPractice.authorizetion.model.User;
 import com.oauthPractice.authorizetion.service.AuthService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@SecurityRequirement(name = "basicAuth")
 @RequestMapping("/auth")
 public class AuthController {
     @Autowired
     private AuthService authService;
 
-    @GetMapping("/test")
-    private String getTestResult() {
-        return authService.getTestResult();
+    @PostMapping("user")
+    public ResponseEntity<?> createUser(@RequestBody User user) {
+        return ResponseEntity.ok(authService.createUser(user));
     }
 
-    @GetMapping("/authTest")
-    private String getAuthTestResult() {
-        return authService.getTestResult();
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("user")
+    public ResponseEntity<?> getUsers() {
+        try {
+            return ResponseEntity.ok(authService.getUsers());
+        } catch (UsernameNotFoundException e) {
+            return ResponseEntity.status(403).body("User not found or unauthorized");
+        }
     }
 }
