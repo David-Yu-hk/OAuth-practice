@@ -3,6 +3,7 @@ package com.oauthPractice.authorizetion.controller;
 import com.oauthPractice.authorizetion.model.User;
 import com.oauthPractice.authorizetion.service.AuthService;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -17,7 +18,7 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("user")
-    public ResponseEntity<?> createUser(@RequestBody User user) {
+    public ResponseEntity<?> createUser(@Valid @RequestBody User user) {
         return ResponseEntity.ok(authService.createUser(user));
     }
 
