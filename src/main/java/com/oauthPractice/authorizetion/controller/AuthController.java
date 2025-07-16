@@ -2,7 +2,6 @@ package com.oauthPractice.authorizetion.controller;
 
 import com.oauthPractice.authorizetion.model.User;
 import com.oauthPractice.authorizetion.service.AuthService;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,7 +10,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@SecurityRequirement(name = "basicAuth")
 @RequestMapping("/auth")
 public class AuthController {
     @Autowired
@@ -30,5 +28,10 @@ public class AuthController {
         } catch (UsernameNotFoundException e) {
             return ResponseEntity.status(403).body("User not found or unauthorized");
         }
+    }
+
+    @GetMapping("hello")
+    public String home() {
+        return "hello";
     }
 }
