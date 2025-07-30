@@ -12,7 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 @Service
-public class DiscordAuthService {
+public class DiscordApiService {
     @Autowired
     private OAuth2AuthorizedClientService authorizedClientService;
     private static final String DISCORD_API_BASE_URL = "https://discord.com/api";
