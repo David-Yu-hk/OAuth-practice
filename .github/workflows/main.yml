@@ -15,7 +15,7 @@ jobs:
       uses: actions/checkout@v3
 
     - name: Set up JDK
-      uses: actions/setup-java@v4
+      uses: actions/setup-java@v3
       with:
         java-version: '17'
         distribution: 'temurin'
@@ -30,7 +30,7 @@ jobs:
       run: ./gradlew test
 
     - name: Upload JAR artifact
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: spring-boot-app
         path: build/libs/*.jar
