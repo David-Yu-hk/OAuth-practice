@@ -1,38 +1,34 @@
 package com.oauthPractice.authorizetion.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.oauthPractice.authorizetion.model.discord.DiscordChannel;
-import com.oauthPractice.authorizetion.model.discord.DiscordGuild;
-import com.oauthPractice.authorizetion.service.DiscordApiService;
+import com.oauthPractice.authorizetion.service.DiscordBotApiService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/discord")
-@RequiredArgsConstructor
-public class DiscordApiController {
+@RequestMapping("/discord/bot")
+public class DiscordBotApiController {
     @Autowired
-    private DiscordApiService discordApiService;
+    private DiscordBotApiService discordBotApiService;
 
-    @Operation(summary = "Get user guilds")
+    @Operation(summary = "Get user guild's channels")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful response",
                     content = @Content(mediaType = "application/json",
-                            array = @ArraySchema(schema = @Schema(implementation = DiscordGuild.class)))),
+                            array = @ArraySchema(schema = @Schema(implementation = DiscordChannel.class)))),
     })
-    @GetMapping("/guilds")
-    public ResponseEntity<?> getUserJoinedServer(OAuth2AuthenticationToken authentication) {
-        return ResponseEntity.ok(discordApiService.getUserJoinedServer(authentication));
+    @GetMapping("/guilds/{guildId}/channels")
+    public ResponseEntity<?> getServerChannelsId(@PathVariable Long guildId) {
+        return ResponseEntity.ok(discordBotApiService.getServerChannelsId(guildId));
     }
 }

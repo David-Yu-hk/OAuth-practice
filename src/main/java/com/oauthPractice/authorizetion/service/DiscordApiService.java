@@ -1,10 +1,9 @@
 package com.oauthPractice.authorizetion.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.oauthPractice.authorizetion.model.discord.DiscordGuild;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
@@ -18,19 +17,25 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
+@Slf4j
 @Service
 public class DiscordApiService {
     @Autowired
     private OAuth2AuthorizedClientService authorizedClientService;
-    private static final String DISCORD_API_BASE_URL = "https://discord.com/api";
+    @Value("${discord.base.url}")
+    private String DISCORD_API_BASE_URL;
 
-    public List<DiscordGuild> getUserJoinedServer(OAuth2AuthenticationToken authentication) throws JsonProcessingException {
+    private String getAccessToken(OAuth2AuthenticationToken authentication) {
         OAuth2AuthorizedClient client = authorizedClientService.loadAuthorizedClient(
                 authentication.getAuthorizedClientRegistrationId(),
                 authentication.getName()
         );
 
-        String accessToken = client.getAccessToken().getTokenValue();
+        return client.getAccessToken().getTokenValue();
+    }
+
+    public List<DiscordGuild> getUserJoinedServer(OAuth2AuthenticationToken authentication) {
+        String accessToken = getAccessToken(authentication);
 
         RestTemplate restTemplate = new RestTemplate();
         HttpHeaders headers = new HttpHeaders();
@@ -39,11 +44,12 @@ public class DiscordApiService {
 
         HttpEntity<String> entity = new HttpEntity<>(headers);
 
+        log.info("Discord guilds api: {}", DISCORD_API_BASE_URL + "/users/@me/guilds");
         ResponseEntity<List<DiscordGuild>> response = restTemplate.exchange(
                 DISCORD_API_BASE_URL + "/users/@me/guilds",
                 HttpMethod.GET,
                 entity,
-                new ParameterizedTypeReference<List<DiscordGuild>>() {}
+                new ParameterizedTypeReference<>() {}
         );
 
         return response.getBody();

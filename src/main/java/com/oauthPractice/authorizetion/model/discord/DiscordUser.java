@@ -21,14 +21,9 @@ public class DiscordUser {
     private Integer flags;
     private Integer premium_type;
     private Integer public_flags;
-    private AvatarDecorationData avatarDecorationData;
+    private DiscordAvatarDecorationData avatarDecorationData;
     private Collectibles collectibles;
     private PrimaryGuild primaryGuild;
-}
-
-class AvatarDecorationData {
-    private Long skuId;
-    private String asset;
 }
 
 class Collectibles {
