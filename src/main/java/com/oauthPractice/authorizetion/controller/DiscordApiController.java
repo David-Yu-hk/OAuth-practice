@@ -1,6 +1,14 @@
 package com.oauthPractice.authorizetion.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.oauthPractice.authorizetion.model.discord.DiscordGuild;
 import com.oauthPractice.authorizetion.service.DiscordApiService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.media.ArraySchema;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -16,10 +24,14 @@ public class DiscordApiController {
     @Autowired
     private DiscordApiService discordApiService;
 
+    @Operation(summary = "Get user guilds")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Successful response",
+                    content = @Content(mediaType = "application/json",
+                            array = @ArraySchema(schema = @Schema(implementation = DiscordGuild.class)))),
+    })
     @GetMapping("/guilds")
-    public ResponseEntity<String> getUserJoinedServer(OAuth2AuthenticationToken authentication) {
-        String response = discordApiService.getUserJoinedServer(authentication);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<?> getUserJoinedServer(OAuth2AuthenticationToken authentication) throws JsonProcessingException {
+        return ResponseEntity.ok(discordApiService.getUserJoinedServer(authentication));
     }
-
 }

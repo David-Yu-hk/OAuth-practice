@@ -1,5 +1,7 @@
 package com.oauthPractice.authorizetion.model.discord;
 
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.databind.ser.std.ToStringSerializer;
 import lombok.Data;
 
 import java.time.LocalDateTime;
@@ -7,6 +9,7 @@ import java.util.List;
 
 @Data
 public class DiscordGuild {
+    @JsonSerialize(using = ToStringSerializer.class)
     private Long id;
     private String name;
     private String icon;
@@ -26,7 +29,7 @@ public class DiscordGuild {
     private Integer explicitContentFilter;
     private List<DiscordRole> roles;
     private List<DiscordEmoji> emojis;
-    private List<DiscordGuildFeatures> features;
+    private List<String> features;
     private Integer mfaLevel;
     private Long applicationId;
     private Long systemChannelId;
